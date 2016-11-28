@@ -111,7 +111,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func updateLastUpdatedItemToolTip() {
-        lastUpdatedItem.toolTip = nextScheduledUpdate != nil ? String(format: NSLocalizedString("Next Update: %@", comment: ""), fmt.string(from: nextScheduledUpdate)) : nil
+        if nextScheduledUpdate != nil {
+            lastUpdatedItem.toolTip = String(format: NSLocalizedString("Next Update: %@", comment: ""), fmt.string(from: nextScheduledUpdate))
+        } else {
+            lastUpdatedItem.toolTip = nil
+        }
     }
     
     func showError(sender: Any?) {
