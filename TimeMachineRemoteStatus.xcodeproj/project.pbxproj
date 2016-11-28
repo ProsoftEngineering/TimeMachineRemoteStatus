@@ -162,7 +162,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "INFO_PLIST=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Contents/Info.plist\"\nVERSION=$(date +\"%Y%m%d%H\")\ndefaults write $INFO_PLIST CFBundleVersion $VERSION";
+			shellScript = "INFO_PLIST=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Contents/Info.plist\"\nVERSION=$(TZ=\":America/Los_Angeles\" date +\"%Y%m%d%H\")\ndefaults write $INFO_PLIST CFBundleVersion $VERSION";
 		};
 /* End PBXShellScriptBuildPhase section */
 
