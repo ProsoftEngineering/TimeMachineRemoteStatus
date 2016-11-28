@@ -31,6 +31,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let fmt = DateFormatter()
     let backupsManager = BackupsManager()
     var prefsController: PreferencesController!
+    var scheduleTimer: Timer!
+    var nextScheduledUpdate: Date!
+    var lastUpdatedItem: NSMenuItem!
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         statusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
@@ -41,12 +44,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         fmt.timeStyle = .short
         fmt.dateStyle = .short
         
-        update()
-        
         let didChangeHandler = {(notif: Notification) in
             self.update()
         }
         NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil, using: didChangeHandler)
+        
+        update()
+        scheduleNextUpdate();
     }
     
     func update() {
@@ -81,7 +85,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(NSMenuItem.separator())
         }
 
-        let lastUpdatedItem = NSMenuItem(title: String(format: NSLocalizedString("Updated: %@", comment: ""), fmt.string(from: Date())), action: nil, keyEquivalent: "")
+        lastUpdatedItem = NSMenuItem(title: String(format: NSLocalizedString("Updated: %@", comment: ""), fmt.string(from: Date())), action: nil, keyEquivalent: "")
+        updateLastUpdatedItemToolTip()
         let updateItem = NSMenuItem(title: NSLocalizedString("Update Now", comment: ""), action: #selector(update), keyEquivalent: "")
         updateItem.target = self
         menu.addItem(lastUpdatedItem)
@@ -105,6 +110,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem?.menu = menu
     }
     
+    func updateLastUpdatedItemToolTip() {
+        lastUpdatedItem.toolTip = nextScheduledUpdate != nil ? String(format: NSLocalizedString("Next Update: %@", comment: ""), fmt.string(from: nextScheduledUpdate)) : nil
+    }
+    
     func showError(sender: Any?) {
         if let item = sender as? NSMenuItem, let backupHost = item.representedObject as? BackupHost {
             let alert = NSAlert()
@@ -125,5 +134,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func showAbout(sender: Any?) {
         NSApp.activate(ignoringOtherApps: true)
         NSApp.orderFrontStandardAboutPanel(sender)
+    }
+    
+    func scheduleNextUpdate() {
+        // Update every hour at X:30
+        guard let cal = NSCalendar(calendarIdentifier: .gregorian) else {
+            print("Got nil calendar")
+            return
+        }
+        let now = Date()
+        let nowComps = cal.components([.hour, .minute], from: now)
+        let scheduledMinute = 30
+        // If we're under 1 minute of the scheduled time, use the current hour. Otherwise use the next hour
+        let hour: Int
+        if nowComps.minute! < (scheduledMinute - 1) {
+            hour = nowComps.hour!
+        } else {
+            hour = nowComps.hour! + 1
+        }
+        guard let scheduledDate = cal.date(bySettingHour: hour, minute: scheduledMinute, second: 0, of: now) else {
+            print("Got nil date")
+            return
+        }
+        
+        nextScheduledUpdate = scheduledDate
+        
+        let timerBlock = {(timer: Timer) in
+            self.update()
+            self.scheduleNextUpdate()
+        }
+        if scheduleTimer != nil {
+            scheduleTimer.invalidate()
+        }
+        scheduleTimer = Timer(fire: scheduledDate, interval: 0, repeats: false, block: timerBlock)
+        RunLoop.current.add(scheduleTimer, forMode: RunLoopMode.defaultRunLoopMode)
+        
+        updateLastUpdatedItemToolTip()
     }
 }
