@@ -32,11 +32,15 @@ class PreferencesController: NSWindowController, NSTableViewDelegate, NSTableVie
     
     var hosts: [String] = []
     
+    let HostsTableDragAndDropDataType = "HostsTableDragAndDropDataType"
+    
     override var windowNibName : String! {
         return "Preferences"
     }
     
     override func windowDidLoad() {
+        tableView.register(forDraggedTypes: [HostsTableDragAndDropDataType])
+
         if let hosts = UserDefaults().object(forKey: "Hosts") as? [String] {
             self.hosts = hosts
             tableView.reloadData()
@@ -78,6 +82,45 @@ class PreferencesController: NSWindowController, NSTableViewDelegate, NSTableVie
     
     func tableViewSelectionDidChange(_ notification: Notification) {
         removeButton?.isEnabled = tableView.numberOfSelectedRows != 0
+    }
+    
+    func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
+        let data = NSKeyedArchiver.archivedData(withRootObject: rowIndexes)
+        pboard.declareTypes([HostsTableDragAndDropDataType], owner: self)
+        pboard.setData(data, forType: HostsTableDragAndDropDataType)
+        return true
+    }
+    
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+        return dropOperation == .above ? .move : NSDragOperation(rawValue: 0)
+    }
+    
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+        guard let rowIndexesData = info.draggingPasteboard().data(forType: HostsTableDragAndDropDataType) else {
+            print("ERROR: Bad pboard data")
+            return false
+        }
+        guard let rowIndexes = NSKeyedUnarchiver.unarchiveObject(with: rowIndexesData) as? IndexSet else {
+            print("ERROR: Bad pboard archived data")
+            return false
+        }
+        for idx in rowIndexes {
+            if row == idx + 1 || row == idx {
+                // No change
+                continue
+            }
+            let host = hosts[idx]
+            hosts.remove(at: idx)
+            if row > hosts.count {
+                hosts.append(host)
+            } else if row > idx {
+                hosts.insert(host, at: row - 1)
+            } else {
+                hosts.insert(host, at: row)
+            }
+        }
+        save()
+        return true
     }
     
 }
