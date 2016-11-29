@@ -36,6 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var lastUpdatedItem: NSMenuItem!
     var updateCount = 0
     var backups: [String: BackupHost] = [:]
+    var lastUpdate: Date?
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         statusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
@@ -68,6 +69,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         buildMenu() // to show "Updating..."
         backupsManager.update { (backups: [String : BackupHost]) -> (Void) in
             self.updateCount = self.updateCount - 1
+            self.lastUpdate = Date()
             self.backups = backups
             self.buildMenu()
         }
@@ -111,7 +113,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(NSMenuItem.separator())
         }
 
-        lastUpdatedItem = NSMenuItem(title: String(format: NSLocalizedString("Updated: %@", comment: ""), fmt.string(from: Date())), action: nil, keyEquivalent: "")
+        let lastUpdateItemTitle: String
+        if lastUpdate == nil {
+            lastUpdateItemTitle = NSLocalizedString("Updated: Never", comment: "")
+        } else {
+            lastUpdateItemTitle = String(format: NSLocalizedString("Updated: %@", comment: ""), fmt.string(from: lastUpdate!))
+        }
+        lastUpdatedItem = NSMenuItem(title: lastUpdateItemTitle, action: nil, keyEquivalent: "")
         updateLastUpdatedItemToolTip()
         let updateItem: NSMenuItem
         if updateCount == 0 {
