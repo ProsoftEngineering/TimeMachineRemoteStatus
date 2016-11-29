@@ -43,10 +43,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         fmt.timeStyle = .short
         fmt.dateStyle = .short
         
-        let didChangeHandler = {(notif: Notification) in
+        let hostsDidChangeHandler = {(notif: Notification) in
             self.update()
         }
-        NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil, using: didChangeHandler)
+        NotificationCenter.default.addObserver(forName: PreferencesController.hostsDidUpdateNotification, object: nil, queue: nil, using: hostsDidChangeHandler)
         
         update()
         scheduleNextUpdate();

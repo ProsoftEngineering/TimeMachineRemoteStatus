@@ -30,6 +30,8 @@ class PreferencesController: NSWindowController, NSTableViewDelegate, NSTableVie
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var removeButton: NSButton!
     
+    static let hostsDidUpdateNotification = NSNotification.Name("PreferencesControllerHostsDidUpdateNotification")
+    
     var hosts: [String] = []
     
     let HostsTableDragAndDropDataType = "HostsTableDragAndDropDataType"
@@ -63,6 +65,7 @@ class PreferencesController: NSWindowController, NSTableViewDelegate, NSTableVie
     
     func save() {
         UserDefaults().set(hosts, forKey: "Hosts")
+        NotificationCenter.default.post(name: PreferencesController.hostsDidUpdateNotification, object: nil)
     }
     
     func numberOfRows(in tableView: NSTableView) -> Int {
