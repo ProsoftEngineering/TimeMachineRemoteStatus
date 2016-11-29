@@ -34,6 +34,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var scheduleTimer: Timer!
     var nextScheduledUpdate: Date!
     var lastUpdatedItem: NSMenuItem!
+    var updateCount = 0
+    var backups: [String: BackupHost] = [:]
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         statusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
@@ -44,25 +46,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         fmt.dateStyle = .short
         
         let hostsDidChangeHandler = {(notif: Notification) in
-            self.update()
+            self.startUpdate()
         }
         NotificationCenter.default.addObserver(forName: PreferencesController.hostsDidUpdateNotification, object: nil, queue: nil, using: hostsDidChangeHandler)
         
-        update()
-        scheduleNextUpdate();
+        updateCycle()
     }
     
-    func update() {
+    func updateCycle() {
+        startUpdate()
+        scheduleNextUpdate()
+    }
+    
+    func startUpdate() {
+        updateCount = updateCount + 1
+        
         if let hosts = UserDefaults().value(forKey: "Hosts") as? [String] {
             backupsManager.hosts = hosts
         }
         
+        buildMenu() // to show "Updating..."
         backupsManager.update { (backups: [String : BackupHost]) -> (Void) in
-            self.updateWithBackups(backups)
+            self.updateCount = self.updateCount - 1
+            self.backups = backups
+            self.buildMenu()
         }
     }
     
-    func updateWithBackups(_ backups: [String: BackupHost]) {
+    func buildMenu() {
         let menu = NSMenu()
         var error = false
         
@@ -104,7 +115,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         lastUpdatedItem = NSMenuItem(title: String(format: NSLocalizedString("Updated: %@", comment: ""), fmt.string(from: Date())), action: nil, keyEquivalent: "")
         updateLastUpdatedItemToolTip()
-        let updateItem = NSMenuItem(title: NSLocalizedString("Update Now", comment: ""), action: #selector(update), keyEquivalent: "")
+        let updateItem: NSMenuItem
+        if updateCount == 0 {
+            updateItem = NSMenuItem(title: NSLocalizedString("Update Now", comment: ""), action: #selector(startUpdate), keyEquivalent: "")
+        } else {
+            updateItem = NSMenuItem(title: NSLocalizedString("Updating…", comment: ""), action: nil, keyEquivalent: "")
+        }
         updateItem.target = self
         menu.addItem(lastUpdatedItem)
         menu.addItem(updateItem)
@@ -185,8 +201,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         nextScheduledUpdate = scheduledDate
         
         let timerBlock = {(timer: Timer) in
-            self.update()
-            self.scheduleNextUpdate()
+            self.updateCycle()
         }
         if scheduleTimer != nil {
             scheduleTimer.invalidate()
