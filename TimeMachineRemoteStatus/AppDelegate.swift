@@ -61,8 +61,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         let menu = NSMenu()
         var error = false
+        
+        // Sort backup keys (hosts) based on their order in the original hosts array
+        let backupsKeys = backups.keys.sorted { (s1: String, s2: String) -> Bool in
+            guard
+                let idx1 = backupsManager.hosts.index(of: s1),
+                let idx2 = backupsManager.hosts.index(of: s2)
+            else {
+                print("FATAL: Can't get index of \(s1) or \(s2)")
+                exit(-1)
+            }
+            return idx1 < idx2
+        }
 
-        for host in backups.keys.sorted() {
+        for host in backupsKeys {
             let backupHost = backups[host]
             let hostItem = NSMenuItem(title: host, action: nil, keyEquivalent: "")
             menu.addItem(hostItem)
