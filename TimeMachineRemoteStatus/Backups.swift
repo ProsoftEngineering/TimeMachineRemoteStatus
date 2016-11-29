@@ -44,7 +44,7 @@ class BackupsManager: NSObject {
     
     var hosts: [String] = []
     let regex: NSRegularExpression
-    let cal = NSCalendar(calendarIdentifier: .gregorian)
+    let cal: NSCalendar
     
     override init() {
         do {
@@ -54,48 +54,69 @@ class BackupsManager: NSObject {
             print("FATAL: Invalid regex: \(error.localizedDescription)")
             exit(-1)
         }
+        guard let cal = NSCalendar(calendarIdentifier: .gregorian) else {
+            print("FATAL: Got nil calendar")
+            exit(-1)
+        }
+        self.cal = cal
     }
 
-    func update() -> [String: BackupHost] {
-        var backups = [String: BackupHost]()
-        
-        for host in hosts {
-            if backups[host] == nil {
-                backups[host] = BackupHost()
+    typealias UpdateHandler = (_ backups: [String: BackupHost]) -> (Void)
+    
+    func update(handler: @escaping UpdateHandler) -> Void {
+        let hostsCopy = hosts
+        DispatchQueue.global().async {
+            var backups = [String: BackupHost]()
+            let backupsQueue = DispatchQueue(label: "com.prosofteng.timemachineremotestatus.backups.update.group")
+            let group = DispatchGroup()
+            for host in hostsCopy {
+                DispatchQueue.global().async(group: group, execute: {
+                    let backupHost = self.processHost(host)
+                    backupsQueue.sync {
+                        backups[host] = backupHost
+                    }
+                })
             }
-            let result = Process.run(launchPath: "/usr/bin/ssh", args: [host, "tmutil", "listbackups"])
-            if result.status != 0 {
-                backups[host]?.error = result.error
+            group.wait()
+            DispatchQueue.main.async {
+                handler(backups)
+            }
+        }
+    }
+    
+    private func processHost(_ host: String) -> BackupHost {
+        let backupHost = BackupHost()
+        let result = Process.run(launchPath: "/usr/bin/ssh", args: [host, "tmutil", "listbackups"])
+        if result.status != 0 {
+            backupHost.error = result.error
+            return backupHost
+        }
+        
+        for line in result.output.components(separatedBy: "\n") {
+            if line.isEmpty {
                 continue
             }
-            
-            for line in result.output.components(separatedBy: "\n") {
-                if line.isEmpty {
-                    continue
-                }
-                let txt = line as NSString
-                let results = regex.matches(in: line, options: [], range: NSMakeRange(0, txt.length))
-                for result in results {
-                    if result.numberOfRanges == 8 {
-                        let volumeName = txt.substring(with: result.rangeAt(1))
-                        var comps = DateComponents()
-                        comps.year = Int(txt.substring(with: result.rangeAt(2)))!
-                        comps.month = Int(txt.substring(with: result.rangeAt(3)))!
-                        comps.day = Int(txt.substring(with: result.rangeAt(4)))!
-                        comps.hour = Int(txt.substring(with: result.rangeAt(5)))!
-                        comps.minute = Int(txt.substring(with: result.rangeAt(6)))!
-                        comps.second = Int(txt.substring(with: result.rangeAt(7)))!
-                        let date = cal?.date(from: comps)
-                        
-                        backups[host]?.backups.append(Backup(volumeName: volumeName, date: date!))
-                    } else {
-                        print("Unknown line: \(line)")
-                    }
+            let txt = line as NSString
+            let results = self.regex.matches(in: line, options: [], range: NSMakeRange(0, txt.length))
+            for result in results {
+                if result.numberOfRanges == 8 {
+                    let volumeName = txt.substring(with: result.rangeAt(1))
+                    var comps = DateComponents()
+                    comps.year = Int(txt.substring(with: result.rangeAt(2)))!
+                    comps.month = Int(txt.substring(with: result.rangeAt(3)))!
+                    comps.day = Int(txt.substring(with: result.rangeAt(4)))!
+                    comps.hour = Int(txt.substring(with: result.rangeAt(5)))!
+                    comps.minute = Int(txt.substring(with: result.rangeAt(6)))!
+                    comps.second = Int(txt.substring(with: result.rangeAt(7)))!
+                    let date = self.cal.date(from: comps)
+                    backupHost.backups.append(Backup(volumeName: volumeName, date: date!))
+                } else {
+                    print("Unknown line: \(line)")
                 }
             }
         }
         
-        return backups
+        return backupHost
     }
 
 }

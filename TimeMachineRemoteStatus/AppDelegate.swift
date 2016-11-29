@@ -57,8 +57,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             backupsManager.hosts = hosts
         }
         
-        let backups = backupsManager.update()
-        
+        backupsManager.update { (backups: [String : BackupHost]) -> (Void) in
+            self.updateWithBackups(backups)
+        }
+    }
+    
+    func updateWithBackups(_ backups: [String: BackupHost]) {
         let menu = NSMenu()
         var error = false
         
@@ -125,6 +129,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func updateLastUpdatedItemToolTip() {
+        if lastUpdatedItem == nil {
+            return
+        }
         if nextScheduledUpdate != nil {
             lastUpdatedItem.toolTip = String(format: NSLocalizedString("Next Update: %@", comment: ""), fmt.string(from: nextScheduledUpdate))
         } else {
