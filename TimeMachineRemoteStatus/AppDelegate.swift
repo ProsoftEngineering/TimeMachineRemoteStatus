@@ -77,20 +77,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
         var error = false
         
-        // make copies so we get a clean snapshot
-        let backups = self.backups
-        let hosts = backupsManager.hosts
-        
         // Sort backup keys (hosts) based on their order in the original hosts array
         let backupsKeys = backups.keys.sorted { (s1: String, s2: String) -> Bool in
-            guard
-                let idx1 = hosts.index(of: s1),
-                let idx2 = hosts.index(of: s2)
-            else {
-                print("FATAL: Can't get index of \(s1) or \(s2)")
-                exit(-1)
-            }
-            return idx1 < idx2
+            // Indexes can be nil if a host is removed or renamed
+            let index1 = backupsManager.hosts.index(of: s1)
+            let index2 = backupsManager.hosts.index(of: s2)
+            let s1 = index1 != nil ? index1! : Int.max
+            let s2 = index2 != nil ? index2! : Int.max
+            return s1 < s2
         }
 
         for host in backupsKeys {
