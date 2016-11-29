@@ -51,7 +51,7 @@ class BackupsManager: NSObject {
             // /Volumes/Drive/Backups.backupdb/hostname/2016-11-15-164402
             regex = try NSRegularExpression(pattern: "^/Volumes/(.*?)/.*/(\\d{4,4})-(\\d{2,2})-(\\d{2,2})-(\\d{2,2})(\\d{2,2})(\\d{2,2})", options: [])
         } catch let error as NSError {
-            print("Invalid regex: \(error.localizedDescription)")
+            print("FATAL: Invalid regex: \(error.localizedDescription)")
             exit(-1)
         }
     }

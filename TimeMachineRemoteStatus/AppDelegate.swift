@@ -157,7 +157,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func scheduleNextUpdate() {
         // Update every hour at X:30
         guard let cal = NSCalendar(calendarIdentifier: .gregorian) else {
-            print("Got nil calendar")
+            print("ERROR: Got nil calendar")
             return
         }
         let now = Date()
@@ -171,7 +171,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             hour = nowComps.hour! + 1
         }
         guard let scheduledDate = cal.date(bySettingHour: hour, minute: scheduledMinute, second: 0, of: now) else {
-            print("Got nil date")
+            print("ERROR: Got nil date")
             return
         }
         
