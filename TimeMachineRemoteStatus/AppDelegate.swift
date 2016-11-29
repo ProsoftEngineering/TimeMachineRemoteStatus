@@ -37,7 +37,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         statusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
-        statusItem?.image = NSImage(named: "img")
         statusItem?.alternateImage = NSImage(named: "imgalt")
 
         fmt.doesRelativeDateFormatting = true
@@ -61,6 +60,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let backups = backupsManager.update()
         
         let menu = NSMenu()
+        var error = false
 
         for host in backups.keys.sorted() {
             let backupHost = backups[host]
@@ -81,6 +81,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 errorItem.target = self
                 errorItem.representedObject = backupHost!
                 menu.addItem(errorItem)
+                error = true
             }
             menu.addItem(NSMenuItem.separator())
         }
@@ -107,6 +108,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         quitItem.target = NSApp
         menu.addItem(quitItem)
         
+        statusItem?.image = NSImage(named: (error ? "imgerr" : "img"))
         statusItem?.menu = menu
     }
     
