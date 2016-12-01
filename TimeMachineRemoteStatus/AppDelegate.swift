@@ -46,11 +46,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         fmt.timeStyle = .short
         fmt.dateStyle = .short
         
-        let notificationHandler = {(notif: Notification) in
+        NotificationCenter.default.addObserver(forName: PreferencesController.hostsDidUpdateNotification, object: nil, queue: nil, using: {(_) in
             self.startUpdate()
-        }
-        NotificationCenter.default.addObserver(forName: PreferencesController.hostsDidUpdateNotification, object: nil, queue: nil, using: notificationHandler)
-        NSWorkspace.shared().notificationCenter.addObserver(forName: .NSWorkspaceDidWake, object: nil, queue: nil, using: notificationHandler)
+        })
+        NSWorkspace.shared().notificationCenter.addObserver(forName: .NSWorkspaceDidWake, object: nil, queue: nil, using: {(_) in
+            self.updateCycle()
+        })
         
         updateCycle()
     }
