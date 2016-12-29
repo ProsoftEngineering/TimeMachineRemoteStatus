@@ -11,8 +11,6 @@
 		A5056D8D1DDBEFC000DA325F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5056D8C1DDBEFC000DA325F /* Assets.xcassets */; };
 		A534FA991DECC45100AA51AE /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = A534FA9B1DECC45100AA51AE /* Preferences.xib */; };
 		A534FA9C1DECCA3B00AA51AE /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = A534FA9E1DECCA3B00AA51AE /* Credits.rtf */; };
-		A534FAA01DEDF92700AA51AE /* imgerr.png in Resources */ = {isa = PBXBuildFile; fileRef = A534FA9F1DEDF92700AA51AE /* imgerr.png */; };
-		A53EAC4E1DDF8B1700F1EA33 /* imgalt.png in Resources */ = {isa = PBXBuildFile; fileRef = A53EAC4C1DDF8B1700F1EA33 /* imgalt.png */; };
 		A53EAC4F1DDF8B1700F1EA33 /* img.png in Resources */ = {isa = PBXBuildFile; fileRef = A53EAC4D1DDF8B1700F1EA33 /* img.png */; };
 		A53EAC511DDF8E8D00F1EA33 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53EAC501DDF8E8D00F1EA33 /* main.swift */; };
 		A53EAC531DDF909400F1EA33 /* ProcessExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53EAC521DDF909400F1EA33 /* ProcessExtensions.swift */; };
@@ -27,8 +25,6 @@
 		A5056D911DDBEFC000DA325F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A534FA9A1DECC45100AA51AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Preferences.xib; sourceTree = "<group>"; };
 		A534FA9D1DECCA3B00AA51AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
-		A534FA9F1DEDF92700AA51AE /* imgerr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = imgerr.png; sourceTree = "<group>"; };
-		A53EAC4C1DDF8B1700F1EA33 /* imgalt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = imgalt.png; sourceTree = "<group>"; };
 		A53EAC4D1DDF8B1700F1EA33 /* img.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img.png; sourceTree = "<group>"; };
 		A53EAC501DDF8E8D00F1EA33 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		A53EAC521DDF909400F1EA33 /* ProcessExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessExtensions.swift; sourceTree = "<group>"; };
@@ -74,9 +70,7 @@
 				A534FA9B1DECC45100AA51AE /* Preferences.xib */,
 				A5056D8C1DDBEFC000DA325F /* Assets.xcassets */,
 				A5056D911DDBEFC000DA325F /* Info.plist */,
-				A53EAC4C1DDF8B1700F1EA33 /* imgalt.png */,
 				A53EAC4D1DDF8B1700F1EA33 /* img.png */,
-				A534FA9F1DEDF92700AA51AE /* imgerr.png */,
 				A534FA9E1DECCA3B00AA51AE /* Credits.rtf */,
 			);
 			path = TimeMachineRemoteStatus;
@@ -142,11 +136,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A53EAC4E1DDF8B1700F1EA33 /* imgalt.png in Resources */,
 				A5056D8D1DDBEFC000DA325F /* Assets.xcassets in Resources */,
 				A53EAC4F1DDF8B1700F1EA33 /* img.png in Resources */,
 				A534FA9C1DECCA3B00AA51AE /* Credits.rtf in Resources */,
-				A534FAA01DEDF92700AA51AE /* imgerr.png in Resources */,
 				A534FA991DECC45100AA51AE /* Preferences.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

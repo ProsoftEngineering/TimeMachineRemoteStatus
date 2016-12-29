@@ -28,6 +28,8 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     var statusItem: NSStatusItem?
+    var statusImage: NSImage!
+    var statusImageError: NSImage!
     let fmt = DateFormatter()
     let backupsManager = BackupsManager()
     var prefsController: PreferencesController!
@@ -40,7 +42,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         statusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
-        statusItem?.alternateImage = NSImage(named: "imgalt")
+        statusImage = NSImage(named: "img")!
+        statusImageError = colorizeImage(image: statusImage, color: NSColor.red)
+        statusItem?.alternateImage = colorizeImage(image: statusImage, color: NSColor.white)
 
         fmt.doesRelativeDateFormatting = true
         fmt.timeStyle = .short
@@ -54,6 +58,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         })
         
         updateCycle()
+    }
+    
+    func colorizeImage(image: NSImage, color: NSColor) -> NSImage {
+        let newImage = NSImage(size: image.size)
+        newImage.lockFocus()
+        let rect = NSMakeRect(0, 0, image.size.width, image.size.height)
+        image.draw(in: rect, from: NSZeroRect, operation: .sourceOver, fraction: 1.0)
+        color.setFill()
+        NSRectFillUsingOperation(rect, .sourceAtop)
+        newImage.unlockFocus()
+        return newImage
     }
     
     func updateCycle() {
@@ -148,7 +163,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         quitItem.target = NSApp
         menu.addItem(quitItem)
         
-        statusItem?.image = NSImage(named: (error ? "imgerr" : "img"))
+        statusItem?.image = error ? statusImageError : statusImage
         statusItem?.menu = menu
     }
     
