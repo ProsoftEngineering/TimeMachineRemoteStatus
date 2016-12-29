@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,14 +18,14 @@
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="Preferences" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="268" height="278"/>
+            <rect key="contentRect" x="196" y="240" width="268" height="348"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="268" height="278"/>
+                <rect key="frame" x="0.0" y="0.0" width="268" height="348"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zrn-LM-UBW">
-                        <rect key="frame" x="20" y="47" width="228" height="186"/>
+                        <rect key="frame" x="20" y="117" width="228" height="186"/>
                         <clipView key="contentView" id="fwe-4w-Bpr">
                             <rect key="frame" x="1" y="1" width="226" height="184"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -72,7 +72,7 @@
                         </scroller>
                     </scrollView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="V7w-lh-RLd">
-                        <rect key="frame" x="18" y="241" width="43" height="17"/>
+                        <rect key="frame" x="18" y="311" width="43" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Hosts:" id="0CD-eQ-kBC">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -80,7 +80,7 @@
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8Wc-sx-EV7">
-                        <rect key="frame" x="20" y="19" width="23" height="21"/>
+                        <rect key="frame" x="20" y="89" width="23" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="19" id="7Wl-5a-WB9"/>
                             <constraint firstAttribute="width" constant="23" id="UjP-Q0-JoK"/>
@@ -94,7 +94,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dGf-9E-sXt">
-                        <rect key="frame" x="51" y="19" width="23" height="21"/>
+                        <rect key="frame" x="51" y="89" width="23" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="19" id="8dy-RX-qzW"/>
                             <constraint firstAttribute="width" constant="23" id="u1b-gz-hqm"/>
@@ -107,22 +107,48 @@
                             <action selector="removeHost:" target="-2" id="aym-oR-BbE"/>
                         </connections>
                     </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kVX-Xe-PMy">
+                        <rect key="frame" x="20" y="50" width="199" height="17"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Number of days before warning:" id="lPV-dI-zjQ">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yOO-eM-PMN">
+                        <rect key="frame" x="20" y="20" width="228" height="22"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="uKH-1j-cN9">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <binding destination="ETQ-J0-Ufk" name="value" keyPath="values.WarningNumDays" id="VnF-e5-etq"/>
+                        </connections>
+                    </textField>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="8Wc-sx-EV7" secondAttribute="bottom" constant="20" id="1WN-2C-vFj"/>
                     <constraint firstAttribute="trailing" secondItem="Zrn-LM-UBW" secondAttribute="trailing" constant="20" id="59o-le-ORx"/>
+                    <constraint firstItem="yOO-eM-PMN" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="8Gk-Ix-9hB"/>
                     <constraint firstItem="dGf-9E-sXt" firstAttribute="leading" secondItem="8Wc-sx-EV7" secondAttribute="trailing" constant="8" id="FHI-Uj-QGB"/>
+                    <constraint firstAttribute="trailing" secondItem="yOO-eM-PMN" secondAttribute="trailing" constant="20" id="IPu-IR-8aZ"/>
+                    <constraint firstAttribute="trailing" secondItem="kVX-Xe-PMy" secondAttribute="trailing" constant="51" id="Iyr-Jo-JqS"/>
                     <constraint firstItem="V7w-lh-RLd" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="MdR-S1-2eV"/>
                     <constraint firstItem="V7w-lh-RLd" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="Mm0-CM-frL"/>
+                    <constraint firstAttribute="bottom" secondItem="yOO-eM-PMN" secondAttribute="bottom" constant="20" id="QF9-dS-CRw"/>
                     <constraint firstItem="8Wc-sx-EV7" firstAttribute="top" secondItem="Zrn-LM-UBW" secondAttribute="bottom" constant="8" id="QP4-86-ngn"/>
+                    <constraint firstItem="kVX-Xe-PMy" firstAttribute="top" secondItem="dGf-9E-sXt" secondAttribute="bottom" constant="23" id="S6E-aK-cme"/>
+                    <constraint firstItem="kVX-Xe-PMy" firstAttribute="top" secondItem="8Wc-sx-EV7" secondAttribute="bottom" constant="23" id="Xs4-MR-As7"/>
                     <constraint firstItem="Zrn-LM-UBW" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="Y1L-jA-wCq"/>
+                    <constraint firstItem="kVX-Xe-PMy" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="22" id="Y85-Us-Se4"/>
+                    <constraint firstItem="yOO-eM-PMN" firstAttribute="top" secondItem="kVX-Xe-PMy" secondAttribute="bottom" constant="8" id="j71-O2-IDt"/>
                     <constraint firstItem="9S5-sw-HSl" firstAttribute="top" secondItem="V7w-lh-RLd" secondAttribute="bottom" constant="9" id="mZX-YM-foi"/>
                     <constraint firstItem="8Wc-sx-EV7" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="oEi-DM-P5t"/>
-                    <constraint firstAttribute="bottom" secondItem="dGf-9E-sXt" secondAttribute="bottom" constant="20" id="z14-ak-xGN"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="26" y="161"/>
+            <point key="canvasLocation" x="26" y="196"/>
         </window>
+        <userDefaultsController representsSharedInstance="YES" id="ETQ-J0-Ufk"/>
     </objects>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>

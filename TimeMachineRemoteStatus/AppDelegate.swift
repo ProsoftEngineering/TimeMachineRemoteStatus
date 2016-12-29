@@ -29,7 +29,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var statusItem: NSStatusItem?
     var statusImage: NSImage!
-    var statusImageError: NSImage!
     let fmt = DateFormatter()
     let backupsManager = BackupsManager()
     var prefsController: PreferencesController!
@@ -40,10 +39,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var backups: [String: BackupHost] = [:]
     var lastUpdate: Date?
     
+    public override class func initialize() {
+        UserDefaults.standard.register(defaults: ["WarningNumDays": 1])
+    }
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         statusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
-        statusImage = NSImage(named: "img")!
-        statusImageError = colorizeImage(image: statusImage, color: NSColor.red)
+        statusImage = NSImage(named: "img")
         statusItem?.alternateImage = colorizeImage(image: statusImage, color: NSColor.white)
 
         fmt.doesRelativeDateFormatting = true
@@ -95,6 +97,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func buildMenu() {
         let menu = NSMenu()
         var error = false
+        let now = NSDate()
+        var warning = false
+        let secondsInADay = 86400
+        let warningNumDays = Double(secondsInADay * UserDefaults.standard.integer(forKey: "WarningNumDays"))
         
         // Sort backup keys (hosts) based on their order in the original hosts array
         let backupsKeys = backups.keys.sorted { (s1: String, s2: String) -> Bool in
@@ -120,6 +126,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 dateItem.indentationLevel = 1
                 menu.addItem(titleItem)
                 menu.addItem(dateItem)
+                if now.timeIntervalSince(item.date) > warningNumDays {
+                    warning = true
+                }
             } else {
                 let errorItem = NSMenuItem(title: NSLocalizedString("Error", comment: ""), action: #selector(showError), keyEquivalent: "")
                 errorItem.target = self
@@ -163,7 +172,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         quitItem.target = NSApp
         menu.addItem(quitItem)
         
-        statusItem?.image = error ? statusImageError : statusImage
+        if error {
+            statusItem?.image = colorizeImage(image: statusImage, color: NSColor.red)
+        } else if warning {
+            statusItem?.image = colorizeImage(image: statusImage, color: NSColor(calibratedRed:0.50, green:0.00, blue:1.00, alpha:1.0))
+        } else {
+            statusItem?.image = statusImage
+        }
         statusItem?.menu = menu
     }
     
