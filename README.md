@@ -6,7 +6,7 @@ TimeMachineRemoteStatus is a macOS app for displaying the Time Machine status of
 
 # Download
 
-Version 1.0 for macOS 10.12+: [Download](https://github.com/ProsoftEngineering/TimeMachineRemoteStatus/releases/download/v1.0/TimeMachineRemoteStatus.zip)
+Download from the [releases](https://github.com/ProsoftEngineering/TimeMachineRemoteStatus/releases) page. Requires macOS 10.12 or later.
 
 # Usage
 
