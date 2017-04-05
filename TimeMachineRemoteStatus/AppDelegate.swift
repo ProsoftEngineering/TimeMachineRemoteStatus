@@ -39,11 +39,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var backups: [String: BackupHost] = [:]
     var lastUpdate: Date?
     
-    public override class func initialize() {
-        UserDefaults.standard.register(defaults: ["WarningNumDays": 1])
-    }
-    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        UserDefaults.standard.register(defaults: ["WarningNumDays": 1])
+
         statusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
         statusImage = NSImage(named: "img")
         statusItem?.alternateImage = colorizeImage(image: statusImage, color: NSColor.white)
