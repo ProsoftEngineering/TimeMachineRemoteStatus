@@ -14,6 +14,10 @@ Go to Preferences and add one or more IP addresses or hostnames corresponding to
 
 # Release Notes
 
+1.1 - April 5, 2017
+
+- Show purple icon if a backup hasn't completed in one day
+
 1.0 - December 2, 2016
 
 - Initial release
